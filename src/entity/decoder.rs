@@ -620,8 +620,8 @@ impl QAngleSerializerBit {
     }
 
     fn read_angle(&self, reader: &mut Reader<'_>) -> Result<f32, std::io::Error> {
-        let v = reader.read_var::<u32>(self.bits)? as f32;
-        Ok(v * 360.0 / ((1 << self.bits) as f32))
+        let v = reader.read_var::<u32>(self.bits)? as f64;
+        Ok((v * 360.0 / ((1u64 << self.bits) as f64)) as f32)
     }
 }
 
