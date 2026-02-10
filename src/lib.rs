@@ -382,7 +382,7 @@ impl<T: std::io::BufRead + Send + Sync> CsDemoParser<T> {
             ));
         }
 
-        let Some(network_protocol) = msg.network_protocol else {
+        let Some(network_protocol) = msg.patch_version else {
             return Err(std::io::Error::new(
                 std::io::ErrorKind::InvalidData,
                 "Missing network protocol in demo file header",
