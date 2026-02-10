@@ -570,7 +570,7 @@ primitive_serializer!(
         let read = |reader: &mut Reader<'_>| -> Result<f32, std::io::Error> {
             const BITS: u32 = 20;
             let v = reader.read_unsigned::<BITS, u32>()? as f32;
-            Ok((v * 360.0 / ((1 << BITS) as f32)) - 180.0)
+            Ok((v * 360.0 / ((1u32 << BITS) as f32)) - 180.0)
         };
 
         let mut angle = QAngle::default();
