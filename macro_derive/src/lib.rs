@@ -140,7 +140,7 @@ pub fn game_event_derive(input: TokenStream) -> TokenStream {
         }
 
         impl #ident_msg {
-            fn factory(keys: &#crate_path::game_event::derive::ListKeysT) -> Result<Box<dyn #crate_path::game_event::derive::GameEventSerializer>, std::io::Error> {
+            pub fn factory(keys: &#crate_path::game_event::derive::ListKeysT) -> Result<Box<dyn #crate_path::game_event::derive::GameEventSerializer>, std::io::Error> {
                 Ok(Box::new(#ident_eid {
                     #( #factory )*
                 }))
