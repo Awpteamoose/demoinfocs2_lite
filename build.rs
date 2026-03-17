@@ -17,6 +17,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 "GameTracking-CS2/Protobufs/gameevents.proto",
                 // "GameTracking-CS2/Protobufs/usermessages.proto",
                 "GameTracking-CS2/Protobufs/netmessages.proto",
+                "GameTracking-CS2/Protobufs/usercmd.proto",
+                "GameTracking-CS2/Protobufs/cs_usercmd.proto",
                 "GameTracking-CS2/Protobufs/demo.proto",
             ],
             &["GameTracking-CS2/Protobufs/"],
