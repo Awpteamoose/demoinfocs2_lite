@@ -5,14 +5,14 @@ use bitstream_io::BitRead;
 use crate::{
     bit::BitReaderExt,
     entity::{
-        Reader,
         field::FieldType,
         serializer::{
+            vector::{QAngle, Transform6, Vector2, Vector3, Vector4},
             ArraySerializer, EntityField, EntitySerializer, EntitySerializerMultiComponents,
             EntitySerializerTypeWarpAdapter, EntitySerializerTyped, OptionalSerializer,
             TypedEntitySerializerAdapter, VectorSerializer,
-            vector::{QAngle, Transform6, Vector2, Vector3, Vector4},
         },
+        Reader,
     },
     protobuf,
 };
@@ -227,6 +227,29 @@ pub fn get_serializer(
                 }
             }
         }
+        "NET_DATA_TYPE_BINARY_BLOCK" => {
+            if components != 1 {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "Multiple components for BINARY_BLOCK are not supported",
+                ));
+            } else if let Some(ty) = field_override {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!("Field type warp is not supported for BINARY_BLOCK: {ty}"),
+                ));
+            }
+
+            match encoder {
+                None => serializer_derivation(BinaryBlockSerializer, field_type),
+                Some(t) => {
+                    return Err(std::io::Error::new(
+                        std::io::ErrorKind::InvalidData,
+                        format!("Unsupported encoder for BINARY_BLOCK: {t}"),
+                    ));
+                }
+            }
+        }
         "NET_DATA_TYPE_BOOL" => {
             if components != 1 {
                 return Err(std::io::Error::new(
@@ -398,6 +421,51 @@ primitive_serializer!(
 
         Ok(())
     }
+);
+
+#[inline(always)]
+fn read_binary_block(reader: &mut Reader<'_>) -> Result<Vec<u8>, std::io::Error> {
+    let size = reader.read_varint_u32()? as usize;
+    let mut buf = vec![0u8; size];
+
+    if reader.byte_aligned() {
+        reader.read_bytes(&mut buf)?;
+    } else {
+        for byte in &mut buf {
+            *byte = reader.read_u8()?;
+        }
+    }
+
+    Ok(buf)
+}
+
+#[inline(always)]
+fn skip_binary_block(reader: &mut Reader<'_>) -> Result<(), std::io::Error> {
+    let size = reader.read_varint_u32()? as usize;
+
+    if reader.byte_aligned() {
+        let mut buf = [0u8; 256];
+        let mut remaining = size;
+
+        while remaining > 0 {
+            let chunk = remaining.min(buf.len());
+            reader.read_bytes(&mut buf[..chunk])?;
+            remaining -= chunk;
+        }
+    } else {
+        for _ in 0..size {
+            reader.read_u8()?;
+        }
+    }
+
+    Ok(())
+}
+
+primitive_serializer!(
+    BinaryBlockSerializer,
+    Vec<u8>,
+    read_binary_block,
+    skip_binary_block
 );
 
 #[inline(always)]

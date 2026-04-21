@@ -454,6 +454,16 @@ fn get_type_str(field_type: &FieldType) -> Result<&'static str, std::io::Error> 
 
             "String"
         }
+        "NET_DATA_TYPE_BINARY_BLOCK" => {
+            if components != 1 {
+                return Err(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    "Multiple components for BINARY_BLOCK are not supported",
+                ));
+            }
+
+            "Vec<u8>"
+        }
         "NET_DATA_TYPE_BOOL" => {
             if components != 1 {
                 return Err(std::io::Error::new(

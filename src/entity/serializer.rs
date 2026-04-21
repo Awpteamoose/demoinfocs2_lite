@@ -5,9 +5,9 @@ use bitstream_io::BitRead;
 use crate::{
     bit::BitReaderExt,
     entity::{
-        Reader,
         decoder::{serializer_derivation, skip_varint},
         field::FieldType,
+        Reader,
     },
 };
 
@@ -67,6 +67,13 @@ impl EntityField for u64 {
 }
 
 impl EntityField for i64 {
+    #[inline(always)]
+    fn new() -> Self {
+        0
+    }
+}
+
+impl EntityField for u8 {
     #[inline(always)]
     fn new() -> Self {
         0

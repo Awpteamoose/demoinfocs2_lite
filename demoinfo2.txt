@@ -133,6 +133,7 @@
 		{ m_Name = "CSPlayerBlockingUseAction_t"			m_VarType = "NET_DATA_TYPE_UINT64" },
 		{ m_Name = "AnimationAlgorithm_t"                   m_VarType = "NET_DATA_TYPE_UINT64" }, // uint8
 		{ m_Name = "ResourceId_t"                           m_VarType = "NET_DATA_TYPE_UINT64" },
+		{ m_Name = "CUtlBinaryBlock"                        m_VarType = "NET_DATA_TYPE_BINARY_BLOCK" },
 		{ m_Name = "VectorWS"								m_VarType = "NET_DATA_TYPE_FLOAT32"		m_nComponents="3" },
 
 		// [!] char is decoded as string
