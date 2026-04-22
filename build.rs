@@ -15,7 +15,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .compile_protos(
             &[
                 "GameTracking-CS2/Protobufs/gameevents.proto",
-                // "GameTracking-CS2/Protobufs/usermessages.proto",
+                "GameTracking-CS2/Protobufs/cstrike15_usermessages.proto",
                 "GameTracking-CS2/Protobufs/netmessages.proto",
                 "GameTracking-CS2/Protobufs/usercmd.proto",
                 "GameTracking-CS2/Protobufs/cs_usercmd.proto",
